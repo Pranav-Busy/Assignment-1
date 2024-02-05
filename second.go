@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"reflect"
 )
-
+//memoization
+var mt = make(map[string]map[string]interface{})
 // helper function searches for a key recursively in a nested map
 func helper(key string, m map[string]interface{}) (map[string]interface{}, error) {
 	// Check if the key exists in the current map
@@ -48,12 +49,20 @@ func helper(key string, m map[string]interface{}) (map[string]interface{}, error
 // remove function removes a key from the map
 func remove(key string, m map[string]interface{}, value interface{}) {
 	// Call helper function to find the key in the map
+	if mt[key]!=nil{
+		nestmap:= mt[key]
+		delete(nestmap, key) // Delete the key from the map
+		fmt.Println("the key has been deleted wohooo")
+	}else{
 	if foundVal, err := helper(key, m); err != nil {
 		fmt.Println(err) // Key not found, print error message
 	} else {
+		mt[key]=foundVal
 		delete(foundVal, key) // Delete the key from the map
 		fmt.Println("the key has been deleted wohooo")
+		
 	}
+}
 }
 
 func main() {
